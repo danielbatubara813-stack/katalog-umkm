@@ -70,6 +70,12 @@ Format link: `https://wa.me/<nomor>?text=<pesan>`
 - Instalasi memakai event `beforeinstallprompt` bila didukung; browser lain mendapat petunjuk pemasangan manual.
 - Service worker dan cache tidak digunakan agar data katalog tetap segar dan sesi admin tidak tersimpan di cache publik.
 
+## Deskripsi produk dengan AI (US-14)
+
+- Fitur memakai Gemini Interactions API dari Server Action yang hanya dapat dipanggil admin terautentikasi.
+- `GEMINI_API_KEY` wajib disediakan pada environment server; `GEMINI_MODEL` opsional dengan default `gemini-3.8-flash`.
+- API key tidak dikirim ke browser. Deskripsi hasil AI hanya mengisi kolom yang dapat ditinjau dan diedit, lalu disimpan setelah admin mengirim form produk.
+
 ## Akun admin
 
 Akun admin dibuat dari skrip di panduan workshop (bukan dari aplikasi) dan password bawaannya wajib diganti lewat US-05. Pendaftaran akun baru dimatikan di pengaturan Supabase Auth.

@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createSessionClient } from "@/lib/supabase/session";
+import { buatDeskripsiProduk } from "@/lib/gemini-deskripsi";
 
 export async function requireAuth() {
   const supabase = await createSessionClient();
@@ -149,6 +150,30 @@ export async function tambahProduk(formData) {
 }
 
 export { tambahProduk as createProduct };
+
+export async function buatDeskripsiDenganAI(formData) {
+  await requireAuth();
+
+  const fields = ["nama", "kategori", "informasi_ai", "karakteristik_ai"];
+  const values = Object.fromEntries(
+    fields.map((field) => [field, formData.get(field)])
+  );
+
+  if (
+    Object.values(values).some(
+      (value) => value !== null && typeof value !== "string"
+    )
+  ) {
+    return { error: "Informasi produk tidak valid." };
+  }
+
+  return buatDeskripsiProduk({
+    nama: values.nama || "",
+    kategori: values.kategori || "",
+    informasi: values.informasi_ai || "",
+    karakteristik: values.karakteristik_ai || "",
+  });
+}
 
 export async function hapusProduk(formData) {
   const { supabase } = await requireAuth();
