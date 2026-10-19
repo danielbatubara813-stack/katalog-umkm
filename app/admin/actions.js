@@ -150,6 +150,70 @@ export async function tambahProduk(formData) {
 
 export { tambahProduk as createProduct };
 
+export async function hapusProduk(formData) {
+  const { supabase } = await requireAuth();
+  const id = formData.get("id");
+
+  if (
+    typeof id !== "string" ||
+    !/^[1-9]\d*$/.test(id) ||
+    !Number.isSafeInteger(Number(id))
+  ) {
+    redirect("/admin?error=" + encodeURIComponent("ID produk tidak valid."));
+  }
+
+  const idAngka = Number(id);
+  const { data: produk, error: cariError } = await supabase
+    .from("produk")
+    .select("id")
+    .eq("id", idAngka)
+    .maybeSingle();
+
+  if (cariError) {
+    redirect(
+      "/admin?error=" +
+        encodeURIComponent("Terjadi kesalahan saat menghapus produk. Silakan coba lagi.")
+    );
+  }
+
+  if (!produk) {
+    redirect(
+      "/admin?error=" +
+        encodeURIComponent("Produk tidak ditemukan atau sudah dihapus.")
+    );
+  }
+
+  const { data: produkDihapus, error: hapusError } = await supabase
+    .from("produk")
+    .delete()
+    .eq("id", idAngka)
+    .select("id")
+    .maybeSingle();
+
+  if (hapusError) {
+    redirect(
+      "/admin?error=" +
+        encodeURIComponent("Terjadi kesalahan saat menghapus produk. Silakan coba lagi.")
+    );
+  }
+
+  if (!produkDihapus) {
+    redirect(
+      "/admin?error=" +
+        encodeURIComponent("Produk tidak ditemukan atau sudah dihapus.")
+    );
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/");
+  revalidatePath(`/produk/${idAngka}`);
+  redirect(
+    "/admin?success=" + encodeURIComponent("Produk berhasil dihapus.")
+  );
+}
+
+export { hapusProduk as deleteProduct };
+
 export async function ubahProduk(id, formData) {
   const { supabase } = await requireAuth();
 
