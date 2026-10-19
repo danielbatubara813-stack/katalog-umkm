@@ -56,12 +56,13 @@ app/admin/actions.js     Server Action untuk login, ganti password, dan kelola p
 proxy.js                 proteksi halaman /admin (US-06)
 ```
 
-## Pesan WhatsApp (US-03)
+## Pesan WhatsApp (US-03, US-12)
 
 Format link: `https://wa.me/<nomor>?text=<pesan>`
 
 - `<nomor>` diambil dari `lib/toko.js`, format internasional tanpa tanda + (contoh `6281234567890`).
-- `<pesan>` berisi nama dan harga produk, di-encode dengan `encodeURIComponent`.
+- `<pesan>` berisi nama produk, jumlah, dan harga satuan; total harga disertakan jika jumlah lebih dari satu. Pesan di-encode dengan `encodeURIComponent`.
+- Pemilihan varian dan pembatasan stok belum tersedia karena skema tabel `produk` tidak memiliki kolom varian atau stok.
 
 ## Akun admin
 
