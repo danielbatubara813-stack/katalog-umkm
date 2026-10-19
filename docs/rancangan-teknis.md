@@ -64,6 +64,12 @@ Format link: `https://wa.me/<nomor>?text=<pesan>`
 - `<pesan>` berisi nama produk, jumlah, dan harga satuan; total harga disertakan jika jumlah lebih dari satu. Pesan di-encode dengan `encodeURIComponent`.
 - Pemilihan varian dan pembatasan stok belum tersedia karena skema tabel `produk` tidak memiliki kolom varian atau stok.
 
+## PWA (US-13)
+
+- Manifest berada di `public/manifest.json` dan memakai ikon `public/icons/icon-192.png` serta `public/icons/icon-512.png`.
+- Instalasi memakai event `beforeinstallprompt` bila didukung; browser lain mendapat petunjuk pemasangan manual.
+- Service worker dan cache tidak digunakan agar data katalog tetap segar dan sesi admin tidak tersimpan di cache publik.
+
 ## Akun admin
 
 Akun admin dibuat dari skrip di panduan workshop (bukan dari aplikasi) dan password bawaannya wajib diganti lewat US-05. Pendaftaran akun baru dimatikan di pengaturan Supabase Auth.
