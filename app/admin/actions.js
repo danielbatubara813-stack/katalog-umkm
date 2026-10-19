@@ -3,6 +3,20 @@
 import { redirect } from "next/navigation";
 import { createSessionClient } from "@/lib/supabase/session";
 
+export async function requireAuth() {
+  const supabase = await createSessionClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    redirect("/admin/login?error=" + encodeURIComponent("Silakan masuk terlebih dahulu."));
+  }
+
+  return { supabase, user };
+}
+
 export async function login(formData) {
   const email = formData.get("email");
   const password = formData.get("password");
@@ -42,15 +56,7 @@ export async function gantiPassword(formData) {
   const passwordBaru = formData.get("password_baru")?.toString() || "";
   const konfirmasiPassword = formData.get("konfirmasi_password")?.toString() || "";
 
-  const supabase = await createSessionClient();
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    redirect("/admin/login?error=" + encodeURIComponent("Silakan masuk terlebih dahulu."));
-  }
+  const { supabase } = await requireAuth();
 
   if (!passwordBaru || !konfirmasiPassword) {
     redirect("/admin/password?error=" + encodeURIComponent("Semua kolom wajib diisi."));
